@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel='stylesheet' href='//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css'>
+</head>
+<body class="font-['Hack'] bg-[#0F0F0F] p-5 text-white flex justify-center">
+    <div class="flex flex-col border-2 p-5 border-slate-400/25 rounded">
+        <h3 class="underline text-xl text-center">Raspberry Pi 5</h3>
+        <span id="platformSpan">Platform: </span>
+        <span id="archSpan">Architecture: </span>
+        <div>
+            <span>Memory (RAM):</span>
+            <span id="ramCurr"></span>
+            <progress id="ramProgress"></progress>
+            <span id="ramMax"></span>
+        </div>
+        <div>
+            <span id="cpuSpan">CPU: </span>
+        </div>
+    </div>
+    <script>
+        let platformSpan = document.querySelector("#platformSpan");
+        let archSpan = document.querySelector("#archSpan");
+
+        let ramCurr = document.querySelector("#ramCurr");
+        let ramProgress = document.querySelector("#ramProgress");
+        let ramMax = document.querySelector("#ramMax");
+
+        let cpuSpan = document.querySelector("#cpuSpan");
+
+        fetch("/info").then(res=>res.json()).then(data=>{
+            platformSpan.innerHTML = "Platform: " + data.platform;
+            archSpan.innerHTML = "Architecture: " + data.architecture;
+            
+            ramCurr.innerHTML = data.totalmem-data.freemem + "GB";
+            ramMax.innerHTML = data.totalmem + "GB";
+            ramProgress.value = data.totalmem-data.freemem;
+            ramProgress.max = data.totalmem;
+
+            cpuSpan.innerHTML = "Processor (CPU): " + data.processor.model.trim();
+            console.log(data);
+            
+        })
+    </script>
+</body>
+</html>
