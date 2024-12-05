@@ -19,7 +19,8 @@
             <span id="ramMax"></span>
         </div>
         <div>
-            <span id="cpuSpan">CPU: </span>
+            <span id="cpuSpan">CPU: </span><br/>
+            <span id="coresSpan">Available cores: </span>
         </div>
     </div>
     <script>
@@ -31,17 +32,19 @@
         let ramMax = document.querySelector("#ramMax");
 
         let cpuSpan = document.querySelector("#cpuSpan");
+        let coresSpan = document.querySelector("#coresSpan");
 
         fetch("/info").then(res=>res.json()).then(data=>{
             platformSpan.innerHTML = "Platform: " + data.platform;
             archSpan.innerHTML = "Architecture: " + data.architecture;
             
-            ramCurr.innerHTML = data.totalmem-data.freemem + "GB";
-            ramMax.innerHTML = data.totalmem + "GB";
+            ramCurr.innerHTML = Math.floor((data.totalmem-data.freemem)*10)/10 + "GB";
+            ramMax.innerHTML = Math.floor(data.totalmem*10)/10 + "GB";
             ramProgress.value = data.totalmem-data.freemem;
             ramProgress.max = data.totalmem;
 
-            cpuSpan.innerHTML = "Processor (CPU): " + data.processor.model.trim();
+            cpuSpan.innerHTML = "Processor (CPU): " + data.processor.model;
+            coresSpan.innerHTML = "Available cores: " + data.processor.cores;
             console.log(data);
             
         })
